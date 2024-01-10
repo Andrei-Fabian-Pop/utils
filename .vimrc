@@ -89,8 +89,29 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 
+" React plugins
+Plugin 'pangloss/vim-javascript'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'peitalin/vim-jsx-typescript'
+Plugin 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plugin 'jparise/vim-graphql'
+Plugin 'HerringtonDarkholme/yats.vim'
+Plugin 'neoclide/coc.nvim'
+
+" File Explorer
+" Plugin 'preservim/nerdtree'
+
+" Fuzzy finder
+" Plugin 'ctrlpvim/ctrlp.vim'
+
+" Intellij theme
+Plugin 'morhetz/gruvbox'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
+
+colorscheme gruvbox
+set bg=dark
 
 "split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -147,4 +168,14 @@ map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let python_highlight_all=1
 syntax on
 set rnu
+
+" NerdTree
+
+autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd p
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+let g:coc_global_extensions = [
+  \ 'coc-tsserver'
+  \ ]
 
