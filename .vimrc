@@ -54,6 +54,37 @@ set showcmd
 " spell check
 " set spell
 
+" xml lint
+function! DoPrettyXML()
+  " save the filetype so we can restore it later
+  let l:origft = &ft 
+  set ft= 
+  " delete the xml header if it exists. This will
+  " permit us to surround the document with fake tags
+  " without creating invalid xml.
+  1s/<?xml .*?>//e
+  " insert fake tags around the entire document.
+  " This will permit us to pretty-format excerpts of
+  " XML that may contain multiple top-level elements.
+  0put ='<PrettyXML>'
+  $put ='</PrettyXML>'
+  silent %!xmllint --format -
+  " xmllint will insert an <?xml?> header. it's easy enough to delete
+  " if you don't want it.
+  " delete the fake tags
+  2d  
+  $d  
+  " restore the 'normal' indentation, which is one extra level
+  " too deep due to the extra tags we wrapped around the document.
+  silent %<
+  " back to home
+  1
+  " restore the filetype
+  exe "set ft=" . l:origft
+endfunction
+command! Xmllint call DoPrettyXML()
+
+
 " scroll at EOF
 set scrolloff=5
 filetype plugin on
@@ -178,4 +209,12 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let g:coc_global_extensions = [
   \ 'coc-tsserver'
   \ ]
+
+" block cursor/underline cursor
+let &t_SI = "\e[4 q"
+let &t_EI = "\e[2 q"
+augroup myCmds
+au!
+autocmd VimEnter * silent !echo -ne "\e[2 q"
+augroup END
 
